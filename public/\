@@ -28,15 +28,17 @@ class TestHtmlNode(unittest.TestCase):
         self.assertEqual(leafNode.to_html(), html)
 
     def test_parent_node_to_html(self):
-        children = []
-        for i in range(3):
-            sub_children = []
+       children = []
+       for i in range(3):
+           sub_children = []
 
-            for j in range(3):
-                sub_children.append(LeafNode("p", f"leaf node {i*j}", props={"loop":"{i, j}"}))
+           for j in range(3):
+                sub_children.append(HTMLNode("p", "html node {i*j}", props={"loop":"{i, j}"}))
+                sub_children.append(LeafNode("p", "leaf node {i*j}", props={"loop":"{i, j}"}))
                 
-            children.append(ParentNode("p", children=sub_children, props={"loop":"{i, j}"}))
-            children.append(LeafNode("p", f"leaf node {i}", props={"loop":"{i, j}"}))
+            children.append(ParentNode("p", children=children, props={"loop":"{i, j}"}
+            children.append(HTMLNode("p", "html node {i}", props={"loop":"{i, j}"}))
+            children.append(LeafNode("p", "leaf node {i}", props={"loop":"{i, j}"}))
 
         parentNode = ParentNode("h1", children=children, props={"href":"www.google.com", "alt":"alternative"})
         print(parentNode)
