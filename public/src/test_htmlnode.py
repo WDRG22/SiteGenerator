@@ -39,7 +39,6 @@ class TestHtmlNode(unittest.TestCase):
             children.append(LeafNode("p", f"leaf node {i}", props={"loop":"{i, j}"}))
 
         parentNode = ParentNode("h1", children=children, props={"href":"www.google.com", "alt":"alternative"})
-        print(parentNode)
         parentNode.to_html()
 
 if __name__ == "__main__":
