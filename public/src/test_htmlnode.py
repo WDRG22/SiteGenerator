@@ -41,5 +41,3 @@ class TestHtmlNode(unittest.TestCase):
         parentNode = ParentNode("h1", children=children, props={"href":"www.google.com", "alt":"alternative"})
         parentNode.to_html()
 
-if __name__ == "__main__":
-    unittest.main()
