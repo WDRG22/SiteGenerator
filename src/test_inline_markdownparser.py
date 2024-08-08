@@ -1,8 +1,8 @@
 import unittest
-from src.textnode import TextNode
-from src.markdownparser import *
+from textnode import TextNode
+from inline_markdownparser import *
 
-class TestMarkdownParser(unittest.TestCase):
+class TestInlineMarkdownParser(unittest.TestCase):
     def test_split_nodes_delimiter(self):
         node = TextNode("This is an *example*", text_type="text")
         node2 = TextNode("Let's see if it *works* correctly", text_type="text")
@@ -65,3 +65,23 @@ class TestMarkdownParser(unittest.TestCase):
                 TextNode("to something else", "link", "http://link2.url"),
         ]
         self.assertEqual(test_result, expected_result)
+
+
+    def test_text_to_textnodes(self):
+        text = "This is **text** with an *italic* word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
+
+        test_result = text_to_textnodes(text)
+        expected_result = [
+            TextNode("This is ", "text"),
+            TextNode("text", "bold"),
+            TextNode(" with an ", "text"),
+            TextNode("italic", "italic"),
+            TextNode(" word and a ", "text"),
+            TextNode("code block", "code"),
+            TextNode(" and an ", "text"),
+            TextNode("obi wan image", "image", "https://i.imgur.com/fJRm4Vk.jpeg"),
+            TextNode(" and a ", "text"),
+            TextNode("link", "link", "https://boot.dev"),
+        ]
+        self.assertEqual(test_result, expected_result)
+
