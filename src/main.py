@@ -31,7 +31,7 @@ def copy_directory(src, dst):
 
 def main():
     
-    copy_directory("tests", "src")
+    copy_directory("static", "public")
 
     
 if __name__ == "__main__":
