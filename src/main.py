@@ -1,37 +1,20 @@
-from textnode import TextNode
-from htmlnode import HTMLNode
 import os
 import shutil
+from copystatic import copy_files_r
 
-def copy_directory(src, dst):
-    # ensure destination directory exists
-    if not os.path.exists(dst):
-        os.makedirs(dst)
-    # clear exisiting content in destination
-#    for item in os.listdir(dst):
-#       itempath = os.path.join(dst, item)
-#      if os.path.isfile(itempath):
-#            os.remove(itempath)
-#        else:
-#            shutil.rmtree(itempath)
 
-    # Loop thru items in src directory
-    for item in os.listdir(src):
-        itempath_src = os.path.join(src, item)
-        itempath_dst = os.path.join(dst, item)
-
-        # copy files or create subdirectories recursively
-        if os.path.isfile(itempath_src):
-            shutil.copy2(itempath_src, itempath_dst)
-            print(f"Copied file: {itempath_src} -> {itempath_dst}")
-        else:
-            copy_directory(itempath_src, itempath_dst)
-
+dir_path_static = "../static"
+dir_path_public = "../public"
 
 
 def main():
+
+    print("Deleting public directory")
+    if os.path.exists(dir_path_public):
+        shutil.rmtree(dir_path_public)
     
-    copy_directory("static", "public")
+    print("Copying static files to public directory...")
+    copy_files_r(dir_path_static, dir_path_public)
 
     
 if __name__ == "__main__":

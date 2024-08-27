@@ -1,6 +1,6 @@
 from textnode import *
 from htmlnode import *
-from inline_markdownparser import *
+from inline_markdown import *
 import re
 
 def markdown_to_blocks(markdown):

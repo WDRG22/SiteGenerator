@@ -1,7 +1,7 @@
 import unittest
 from textnode import TextNode
-from inline_markdownparser import *
-from block_markdownparser import *
+from inline_markdown import *
+from block_markdown import *
 
 class TestBlockMarkdownParser(unittest.TestCase):
     def test_markdown_to_blocks(self):
