@@ -53,7 +53,7 @@ class TestBlockMarkdownParser(unittest.TestCase):
                 "4. Fourth item")
 
 
-                # Test paragraph block
+        # Test paragraph block
         test_result_paragraph = block_to_block_type(block_paragraph)
         expected_result_paragraph = "paragraph"
         self.assertEqual(test_result_paragraph, expected_result_paragraph)
@@ -103,41 +103,84 @@ class TestBlockMarkdownParser(unittest.TestCase):
 				)
 
         expected_result = (
-			ParentNode(tag="div",
-				children=[
-		 			'<h1> Welcome to My Page</h1>',
-					'<p>This is a paragraph with some <b>bold</b> and <i>italic</i> text.</p>',
-					'<h2> A List of Items</h2>',
-				ParentNode(tag="ul",
-					children=[
-						'<li>First item</li>',
-						'<li>Second item</li>',
-						'<li>Third item</li>',
-					],
-				),
-					"<p>Here's some code:</p>",
-					ParentNode(tag="pre",
-						children=[
-							'<code>python</code>',
-							'<code>def hello_world():</code>',
-							'<code>    print("Hello, World!")</code>',
-						],
-					),
-					ParentNode(tag="blockquote",
-						children=[
-							'<p>This is a blockquote.</p>',
-							'<p>It can span multiple lines.</p>',
-						],
-					),
-					ParentNode(tag="ol",
-						children=[
-							'<li>First ordered item</li>',
-							'<li>Second ordered item</li>',
-							'<li>Third ordered item</li>',
-						],
-					),
-				],
-			)
+		    ParentNode(tag="div",
+		        children=[
+		            ParentNode(tag="h1",
+		                children=[
+		                    LeafNode(None, "Welcome to My Page", None)
+		                ]),
+		            ParentNode(tag="p",
+		                children=[
+		                    LeafNode(None, "This is a paragraph with some ", None),
+		                    LeafNode("b", "bold", None),
+		                    LeafNode(None, " and ", None),
+		                    LeafNode("i", "italic", None),
+		                    LeafNode(None, " text.", None)
+		                ]),
+		            ParentNode(tag="h2",
+		                children=[
+		                    LeafNode(None, "A List of Items", None)
+		                ]),
+		            ParentNode(tag="ul",
+		                children=[
+		                    ParentNode(tag="li",
+		                        children=[
+		                            LeafNode(None, "First item", None)
+		                        ]),
+		                    ParentNode(tag="li",
+		                        children=[
+		                            LeafNode(None, "Second item", None)
+		                        ]),
+		                    ParentNode(tag="li",
+		                        children=[
+		                            LeafNode(None, "Third item", None)
+		                        ])
+		                ]),
+		            ParentNode(tag="p",
+		                children=[
+		                    LeafNode(None, "Here's some code:", None)
+		                ]),
+		            ParentNode(tag="pre",
+		                children=[
+		                    ParentNode(tag="code",
+		                        children=[
+		                            LeafNode(None, """python\ndef hello_world():\n    print("Hello, World!")""", None)
+		                        ])
+		                ]),
+		            ParentNode(tag="blockquote",
+		                children=[
+		                    ParentNode(tag="p",
+		                        children=[
+		                            LeafNode(None, "This is a blockquote.", None)
+		                        ]),
+		                    ParentNode(tag="p",
+		                        children=[
+		                            LeafNode(None, "It can span multiple lines.", None)
+		                        ])
+		                ]),
+		            ParentNode(tag="ol",
+		                children=[
+		                    ParentNode(tag="li",
+		                        children=[
+		                            LeafNode(None, "First ordered item", None)
+		                        ]),
+		                    ParentNode(tag="li",
+		                        children=[
+		                            LeafNode(None, "Second ordered item", None)
+		                        ]),
+		                    ParentNode(tag="li",
+		                        children=[
+		                            LeafNode(None, "Third ordered item", None)
+		                        ])
+		                ])
+		        ])
 		)
+
         test_result = markdown_to_html_node(markdown)
-        self.assertEqual(test_result, expected_result)
+        try:
+            self.assertEqual(test_result, expected_result)
+        except AssertionError as e:
+            print(f"Expected: {expected_result}")
+            print(f"Actual: {test_result}")
+            raise e
+            

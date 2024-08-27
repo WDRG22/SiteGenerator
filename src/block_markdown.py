@@ -53,17 +53,22 @@ def markdown_to_html_node(markdown):
             children = text_to_children(block, block_type)
             for child in children:
                 block_nodes.append(child)
-
     return ParentNode("div", block_nodes)
         
 def text_to_children(text, text_type):
+    # Code blocks bypass line-by-line processing and are handled as a single text 
+    if text_type == "code":
+        tag = "code"
+        text = text.strip("```")
+        return [ParentNode(tag, children = [LeafNode(None, text, None)])]
+
     lines = text.split("\n")
     children = []
 
     def process_line(line, tag):
             inner_text_children = text_to_textnodes(line)
             inner_html_children = [text_node_to_html_node(child) for child in inner_text_children]
-            return ParentNode(tag, inner_html_children).to_html()
+            return ParentNode(tag, inner_html_children)
 
     for line in lines:
         if text_type == "quote":
@@ -75,14 +80,13 @@ def text_to_children(text, text_type):
         elif text_type == "ordered_list":
             tag = "li"
             line = line.split(". ", 1)[1]
-        elif text_type == "code":
-            tag = "code"
-            line = line.strip("```")
         elif text_type == "heading":
-            stripped_line = line.strip("#")
+            # Strip leading '#' from header
+            stripped_line = line.lstrip("#")
             h_tag_num = len(line) - len(stripped_line)
             tag = f"h{h_tag_num}"
-            line = stripped_line
+            # Strip extra spaces
+            line = stripped_line.strip()
         else:            
             tag = "p"
             
