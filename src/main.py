@@ -1,10 +1,11 @@
 import os
 import shutil
-from copystatic import copy_files_r
+from copy_static import *
+from generate_page import *
 
-
-dir_path_static = "../static"
-dir_path_public = "../public"
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+dir_path_static = os.path.join(project_root, 'static')
+dir_path_public = os.path.join(project_root, 'public')
 
 
 def main():
@@ -15,7 +16,11 @@ def main():
     
     print("Copying static files to public directory...")
     copy_files_r(dir_path_static, dir_path_public)
-
     
+    src_path = os.path.join(project_root, 'content/index.md')
+    template_path = os.path.join(project_root, 'template.html')
+    dst_path = os.path.join(project_root, 'public')
+    generate_page(src_path, template_path, dst_path)
+
 if __name__ == "__main__":
     main()

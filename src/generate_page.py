@@ -1,3 +1,5 @@
+import os
+import re
 from block_markdown import *
 from inline_markdown import *
 from textnode import *
@@ -18,4 +20,30 @@ def extract_title(markdown):
 
 
 def generate_page(src_path, template_path, dst_path):
-    print(f"Generating page from {src_path} to {dst_path} using {template_path}")
+    # Open and store the src and template files
+    src_file = ''
+    with open(src_path, 'r') as file:
+        src_file = file.read()
+
+    template = ''
+    with open(template_path, 'r') as file:
+        template = file.read()
+    
+    # Convert the src file from markdown to html and retrieve its title
+    content = markdown_to_html_node(src_file).to_html()
+    title = extract_title(src_file)
+
+    # Modify the template with the new title and html content
+    html = modify_template(template, title, content)
+
+    # Write the new html file to the dst folder (create folder if it doesn't exist
+    os.makedirs(dst_path, exist_ok=True)
+    with open(os.path.join(dst_path, "index.html"), 'w') as file:
+        file.write(html)
+
+
+# Replace the Title and Content placeholders with actual title and content
+def modify_template(template, title, content):
+    modified_template = re.sub(r'\{\{ Title \}\}', title, template)
+    modified_template = re.sub(r'\{\{ Content \}\}', content, modified_template)
+    return modified_template

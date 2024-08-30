@@ -11,7 +11,7 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
 
         parts = node.text.split(delimiter)
         if len(parts) % 2 == 0:
-            raise ValueError("Unmatched delimiter found")
+            raise ValueError(f"\nUnmatched delimiter '{delimiter}' found in node: {node}\n")
 
         for i in range(len(parts)):
             if parts[i] == "":

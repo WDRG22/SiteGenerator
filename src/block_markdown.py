@@ -56,7 +56,7 @@ def markdown_to_html_node(markdown):
     return ParentNode("div", block_nodes)
         
 def text_to_children(text, text_type):
-    # Code blocks bypass line-by-line processing and are handled as a single text 
+    # Code blocks bypass line-by-line processing and are handled as a single paragrapyi
     if text_type == "code":
         tag = "code"
         text = text.strip("```")
