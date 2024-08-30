@@ -37,10 +37,7 @@ def markdown_to_html_node(markdown):
     block_nodes = []
     for block in blocks:
         block_type = block_to_block_type(block)
-        if block_type == "quote":
-            block_node = ParentNode("blockquote", text_to_children(block, block_type))
-            block_nodes.append(block_node)
-        elif block_type == "unordered_list":
+        if block_type == "unordered_list":
             block_node = ParentNode("ul", text_to_children(block, block_type))
             block_nodes.append(block_node)
         elif block_type == "ordered_list":
@@ -72,8 +69,14 @@ def text_to_children(text, text_type):
 
     for line in lines:
         if text_type == "quote":
-            tag = "p"
-            line = line.lstrip(">")
+            if len(lines) == 1:
+                tag = "blockquote"
+                line = line.lstrip("> ")
+                children.append(process_line(line, tag))
+                return children
+            else:
+                tag = "p"
+                line = line.lstrip("> ")
         elif text_type == "unordered_list":
             tag = "li"
             line = line.lstrip("*- ")
