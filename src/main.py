@@ -17,10 +17,10 @@ def main():
     print("Copying static files to public directory...")
     copy_files_r(dir_path_static, dir_path_public)
     
-    src_path = os.path.join(project_root, 'content/index.md')
+    src_path = os.path.join(project_root, 'content')
     template_path = os.path.join(project_root, 'template.html')
     dst_path = os.path.join(project_root, 'public')
-    generate_page(src_path, template_path, dst_path)
+    generate_page_recursive(src_path, template_path, dst_path)
 
 if __name__ == "__main__":
     main()

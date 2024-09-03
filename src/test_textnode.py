@@ -31,7 +31,7 @@ class TestTextNode(unittest.TestCase):
 
         # Test for image
         imageNode = TextNode("An example image", "image", "https://example.com/image.jpg")
-        imageHtmlNode = LeafNode(tag="img", props={"src": "https://example.com/image.jpg", "alt": "An example image"})
+        imageHtmlNode = LeafNode(tag="img", value="", props={"src": "https://example.com/image.jpg", "alt": "An example image"})
         self.assertEqual(text_node_to_html_node(imageNode), imageHtmlNode)
 
         # Test for plain text

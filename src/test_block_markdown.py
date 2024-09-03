@@ -95,8 +95,8 @@ class TestBlockMarkdownParser(unittest.TestCase):
 				"```python\n"
 				"def hello_world():\n"
 				"    print(\"Hello, World!\")```\n\n"
-				">This is a blockquote.\n"
-				">It can span multiple lines.\n\n\n"
+				"> This is a blockquote.\n"
+				"> It can span multiple lines.\n\n\n"
 				"1. First ordered item\n"
 				"2. Second ordered item\n"
 				"3. Third ordered item\n"
@@ -180,7 +180,5 @@ class TestBlockMarkdownParser(unittest.TestCase):
         try:
             self.assertEqual(test_result, expected_result)
         except AssertionError as e:
-            print(f"Expected: {expected_result}")
-            print(f"Actual: {test_result}")
             raise e
             
