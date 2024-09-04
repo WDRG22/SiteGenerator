@@ -21,7 +21,7 @@ def text_node_to_html_node(text_node):
     if text_node.text_type == "italic":
         return LeafNode(tag="i", value=text_node.text)
     if text_node.text_type == "code":
-        return LeafNode(tag="i", value=text_node.text)
+        return LeafNode(tag="code", value=text_node.text)
     if text_node.text_type == "link":
         return LeafNode(tag="a", value=text_node.text, props={"href":f"{text_node.url}"})
     if text_node.text_type == "image":
