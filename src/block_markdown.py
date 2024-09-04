@@ -10,68 +10,58 @@ def markdown_to_html_node(markdown):
     block_nodes = []
     for block in blocks:
         block_type = block_to_block_type(block)
-        if block_type == "unordered_list":
-            block_node = ParentNode("ul", text_to_children(block, block_type))
-            block_nodes.append(block_node)
-        elif block_type == "ordered_list":
-            block_node = ParentNode("ol", text_to_children(block, block_type))
-            block_nodes.append(block_node)
-        elif block_type == "code":
-            block_node = ParentNode("pre", text_to_children(block, block_type))
-            block_nodes.append(block_node)
-        elif block_type == "quote":
-            block_node = ParentNode("blockquote", text_to_children(block, block_type))
-            block_nodes.append(block_node)
+        block_node = convert_block_to_html_node(block, block_type)
+        if isinstance(block_node, list):
+            block_nodes.extend(block_node)
         else:
-            children = text_to_children(block, block_type)
-            for child in children:
-                block_nodes.append(child)
+            block_nodes.append(block_node)
     return ParentNode("div", block_nodes)
-        
-# Processes text into list of HtmlNodes
-def text_to_children(text, text_type):
-    def process_line(line, tag):
-            inner_text_children = text_to_textnodes(line)
-            inner_html_children = [text_node_to_html_node(child) for child in inner_text_children]
-            return ParentNode(tag, inner_html_children)
 
-    lines = text.split("\n")
-    children = []
+def convert_block_to_html_node(block, block_type):
+    if block_type == "unordered_list":
+        return ParentNode("ul", convert_list_block(block, is_ordered=False))
+    elif block_type == "ordered_list":
+        return ParentNode("ol", convert_list_block(block, is_ordered=True))
+    elif block_type == "code":
+        return convert_code_block(block)
+    elif block_type == "quote":
+        return convert_quote_block(block) 
+    elif block_type == "heading":
+        return convert_heading_block(block)
+    else:
+        return convert_paragraph_block(block)
 
-    # Code blocks bypass line-by-line processing and are handled as a single paragraph
-    if text_type == "code":
-        text = text.strip("```").lstrip("\n")
-        return [ParentNode("code", children = [LeafNode(None, text, None)])]
-
-    # Blockquotes have single <blockquote> tag and are handles as single text
-    if text_type == "quote":
-        quote_children = []
-        for line in lines:
-            line = line.lstrip("> ")
-            text = lines.join()
-            quote_text_children = text_to_textnodes(text)
-            quote_children = [text_node_to_html_node(child) for child in quote_text_children]
-        return quote_children
-
+def convert_list_block(block, is_ordered):
+    lines = block.split("\n")
+    items = []
     for line in lines:
-        if text_type == "unordered_list":
-            tag = "li"
-            line = re.sub(r"[*-]\s", "", line)
-        elif text_type == "ordered_list":
-            tag = "li"
-            line = line.split(". ", 1)[1]
-        elif text_type == "heading":
-            # Strip leading '#' from header
-            stripped_line = line.lstrip("#")
-            h_tag_num = len(line) - len(stripped_line)
-            tag = f"h{h_tag_num}"
-            # Strip extra spaces
-            line = stripped_line.strip()
-        else:            
-            tag = "p"
-            
-        children.append(process_line(line, tag))
-    return children
+        if is_ordered:
+            content = line.split(". ", 1)[1]
+        else:
+            content = re.sub(r"[*-]\s", "", line)
+        items.append(ParentNode("li", text_to_children(content)))
+    return items
+
+def convert_code_block(block):
+    content = block.strip("```").lstrip("\n")
+    return ParentNode("pre", [ParentNode("code", [LeafNode(None, content, None)])])
+
+def convert_quote_block(block):
+    lines = block.split("\n")
+    content = " ".join(line.lstrip("> ") for line in lines)
+    return ParentNode("blockquote", text_to_children(content))
+
+def convert_heading_block(block):
+    level = len(block.split()[0]) # Count number of '#'
+    content = block.lstrip("#").strip()
+    return ParentNode(f"h{level}", text_to_children(content))
+
+def convert_paragraph_block(block):
+    return ParentNode("p", text_to_children(block))
+
+def text_to_children(text):
+    inner_text_children = text_to_textnodes(text)
+    return [text_node_to_html_node(child) for child in inner_text_children]
 
 # Split markdown into blocks by double newlines
 def markdown_to_blocks(markdown):
